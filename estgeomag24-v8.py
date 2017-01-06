@@ -15,7 +15,9 @@ import math
 from datetime import datetime
 import Adafruit_MCP9808.MCP9808 as MCP9808
 
+# importa lib do wapper do ads1256
 import ads1256
+
 
 # Configura o nome base para o arquivo csv
 BASENAME = "EstGeoMag24-v8"
@@ -25,6 +27,8 @@ row_id = 1
 
 # Seta o ganho do ADC
 GANHO = 1
+
+ads1256.inicia(str(GANHO),"2d5") # incia a lib do ads1256
 
 # Instancia e inicializa o sensor MCP9808
 #sensor1 = MCP9808.MCP9808(address=0x18)
@@ -53,7 +57,7 @@ def ReadEstGeoMag():
        
 
     # Inicia a leitura dos valores absolutos dos oito canais do ADC para o vetor ValorDoCanal
-    ValorDoCanal = ads1256.leia_canais(str(GANHO),"2d5")
+    ValorDoCanal = ads1256.leia_canais()
 
     
     a = ValorDoCanal[0]     
@@ -394,4 +398,9 @@ else:
       # Registra efetivamente no arquivo .CSV  (no padrao americano)
       file.write(str(row_id) + ", " + str(a) + ", " + str(b) + ", " + str(c) + ", " + str(format(t, '.8f')) + str(format(u, '.8f')) + str(format(v, '.8f')) + str(format(d, '.8f')) + str(format(w, '.8f')) + str(format(x, '.8f')) + ", " + str(format(y, '.8f')) + ", " + str(format(z, '.8f')) + ", " + str(datetime.now()) + "\r\n")
 
+
+
+
+# termina a utilizacao do ads1256
+ads1256.termina()
        
