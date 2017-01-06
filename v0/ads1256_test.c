@@ -103,21 +103,21 @@ typedef enum
 typedef enum
 {
 	ADS1256_30000SPS = 0,
-	ADS1256_15000SPS,
-	ADS1256_7500SPS,
-	ADS1256_3750SPS,
-	ADS1256_2000SPS,
-	ADS1256_1000SPS,
-	ADS1256_500SPS,
-	ADS1256_100SPS,
-	ADS1256_60SPS,
-	ADS1256_50SPS,
-	ADS1256_30SPS,
-	ADS1256_25SPS,
-	ADS1256_15SPS,
-	ADS1256_10SPS,
-	ADS1256_5SPS,
-	ADS1256_2d5SPS,
+	ADS1256_15000SPS = 1,
+	ADS1256_7500SPS = 2,
+	ADS1256_3750SPS = 3,
+	ADS1256_2000SPS = 4,
+	ADS1256_1000SPS = 5,
+	ADS1256_500SPS = 6,
+	ADS1256_100SPS = 7,
+	ADS1256_60SPS = 8,
+	ADS1256_50SPS = 9,
+	ADS1256_30SPS = 10,
+	ADS1256_25SPS = 11,
+	ADS1256_15SPS = 12,
+	ADS1256_10SPS = 13,
+	ADS1256_5SPS = 14,
+	ADS1256_2d5SPS = 15,
 
 	ADS1256_DRATE_MAX
 }ADS1256_DRATE_E;
@@ -807,82 +807,201 @@ uint16_t Voltage_Convert(float Vref, float voltage)
 *	parameter: NULL
 *	The return value:  NULL
 *********************************************************************************************************
+*
+*   Desta parte para baixo, o codigo foi modificado por Fabio Franco de Oliveira. Email: fabioti6@gmail.com
+*   Foi necessaria a eliminacao do laco principal para leitura de todos os ADCs, sendo
+*   modificado para leitura de somente 1 ADC por vez mediante a passagem de parametros especificando qual 
+*   o canal, ganho e sample rate. Problemas envolvendo a sincronizacao do protocolo SPI precisaram ser 
+*   resolvidos para viabilizar a execução do "ads1256_test" fora do loop. 
+*   Ultima alteracao: 21/05/2016
+*
+*********************************************************************************************************
 */
 
-int  main()
+int  main(int argc, char *argv[])
 {
-      uint8_t id;
+    uint8_t id;
   	int32_t adc[8];
-	int32_t volt[8];
-	uint8_t i;
+	int32_t volt[8], v;
+	uint8_t i,x,y;
 	uint8_t ch_num;
 	int32_t iTemp;
 	uint8_t buf[3];
+    int ads_gain;
+    int ads_channel;
+    int ads_sps;
+
+
     if (!bcm2835_init())
         return 1;
+    
     bcm2835_spi_begin();
-    bcm2835_spi_setBitOrder(BCM2835_SPI_BIT_ORDER_LSBFIRST );      // The default
+    bcm2835_spi_setBitOrder(BCM2835_SPI_BIT_ORDER_LSBFIRST );     // The default
     bcm2835_spi_setDataMode(BCM2835_SPI_MODE1);                   // The default
-    bcm2835_spi_setClockDivider(BCM2835_SPI_CLOCK_DIVIDER_1024); // The default
+    bcm2835_spi_setClockDivider(BCM2835_SPI_CLOCK_DIVIDER_1024);  // The default
     bcm2835_gpio_fsel(SPICS, BCM2835_GPIO_FSEL_OUTP);//
     bcm2835_gpio_write(SPICS, HIGH);
     bcm2835_gpio_fsel(DRDY, BCM2835_GPIO_FSEL_INPT);
     bcm2835_gpio_set_pud(DRDY, BCM2835_GPIO_PUD_UP);    	
-    //ADS1256_WriteReg(REG_MUX,0x01);
-    //ADS1256_WriteReg(REG_ADCON,0x20);
-   // ADS1256_CfgADC(ADS1256_GAIN_1, ADS1256_15SPS);
-   id = ADS1256_ReadChipID();
-   printf("\r\n");
-   printf("ID=\r\n");  
+    
+    id = ADS1256_ReadChipID();
+   
 	if (id != 3)
 	{
 		printf("Error, ASD1256 Chip ID = 0x%d\r\n", (int)id);
 	}
 	else
 	{
-		printf("Ok, ASD1256 Chip ID = 0x%d\r\n", (int)id);
+		//printf("Ok, ASD1256 Chip ID = 0x%d\r\n", (int)id);    // Linha comentada propositalmente
 	}
-  	ADS1256_CfgADC(ADS1256_GAIN_1, ADS1256_15SPS);
-       ADS1256_StartScan(0);
-	ch_num = 8;	
-	//if (ADS1256_Scan() == 0)
-		//{
-			//continue;
-		//}
-		while(1)
-	{
-	       while((ADS1256_Scan() == 0));
-		for (i = 0; i < ch_num; i++)
-		{
-			adc[i] = ADS1256_GetAdc(i);
-              	 volt[i] = (adc[i] * 100) / 167;	
-		}
-		
-		for (i = 0; i < ch_num; i++)
-		{
-	                buf[0] = ((uint32_t)adc[i] >> 16) & 0xFF;
-	                buf[1] = ((uint32_t)adc[i] >> 8) & 0xFF;
-	                buf[2] = ((uint32_t)adc[i] >> 0) & 0xFF;
-	                printf("%d=%02X%02X%02X, %8ld", (int)i, (int)buf[0], 
-	                       (int)buf[1], (int)buf[2], (long)adc[i]);                
 
-	                iTemp = volt[i];	/* uV  */
-					if (iTemp < 0)
-					{
-						iTemp = -iTemp;
-	                  		  	printf(" (-%ld.%03ld %03ld V) \r\n", iTemp /1000000, (iTemp%1000000)/1000, iTemp%1000);
-					}
-					else
-					{
-	                    			printf(" ( %ld.%03ld %03ld V) \r\n", iTemp /1000000, (iTemp%1000000)/1000, iTemp%1000);                    
-					}
-					
+
+   
+   // Nao faz nada se passar poucos argumentos
+   if( argc != 4 ) {                                
+      printf("Este programa requer 3 parametros: canal, ganho e datarate.\n");  
+   }
+
+
+   
+   // Somente executa caso tenham sido passados os 3 argumentos necessarios
+   else									   
+   { 
+        
+ 		// Analisa o primeiro argumento: o canal
+        if (strcmp((argv[1]), "0") == 0) 
+			{  ads_channel=0;  } 
+		else if (strcmp((argv[1]), "1") == 0) 
+			{  ads_channel=1;  }
+		else if (strcmp((argv[1]), "2") == 0) 
+		    {  ads_channel=2;  }
+		else if (strcmp((argv[1]), "3") == 0) 
+			{  ads_channel=3;  }
+		else if (strcmp((argv[1]), "4") == 0) 
+			{  ads_channel=4;  } 
+		else if (strcmp((argv[1]), "5") == 0) 
+			{  ads_channel=5;  }
+		else if (strcmp((argv[1]), "6") == 0) 
+			{  ads_channel=6;  } 
+		else if (strcmp((argv[1]), "7") == 0) 
+		    {  ads_channel=7;  }
+		else  
+		{ 
+			printf ("Canal setado incorretamente: %s\n\n", argv[1]);      
+			ads_channel=666;  
 		}
-			printf("\33[%dA", (int)ch_num);  
-		bsp_DelayUS(1);	
-			}	
-    bcm2835_spi_end();
-    bcm2835_close();
-	
-    return 0;
-}       
+
+
+		// Analisa o segundo argumento: o ganho
+        if (strcmp((argv[2]), "1") == 0) 
+			{  ads_gain=0;  } 
+		else if (strcmp((argv[2]), "2") == 0) 
+	    	{  ads_gain=1;  } 
+		else if (strcmp((argv[2]), "4") == 0) 
+	    	{  ads_gain=2;  } 
+		else if (strcmp((argv[2]), "8") == 0) 
+			{  ads_gain=3;  }  
+		else if (strcmp((argv[2]), "16") == 0) 
+			{  ads_gain=4;  }  
+		else if (strcmp((argv[2]), "32") == 0) 
+	    	{  ads_gain=5;  } 
+		else if (strcmp((argv[2]), "64") == 0) 
+			{  ads_gain=6;  }  
+		else  
+		{ 
+			printf ("Ganho setado incorretamente: %s\n\n", argv[2]);      
+			ads_gain=666;  
+		}
+ 
+
+
+ 	    // Analisa o terceiro argumento: o sps
+        if (strcmp((argv[3]), "2d5") == 0) 
+			{  ads_sps=15;  } 
+		else if (strcmp((argv[3]), "5") == 0) 
+	    	{  ads_sps=14;  } 
+		else if (strcmp((argv[3]), "10") == 0) 
+	    	{  ads_sps=13;  } 
+		else if (strcmp((argv[3]), "15") == 0) 
+			{  ads_sps=12;  }  
+		else if (strcmp((argv[3]), "25") == 0) 
+			{  ads_sps=11;  }  
+		else if (strcmp((argv[3]), "30") == 0) 
+	    	{  ads_sps=10;  } 
+		else if (strcmp((argv[3]), "50") == 0) 
+			{  ads_sps=9;  }  
+		else if (strcmp((argv[3]), "60") == 0) 
+			{  ads_sps=8;  }  
+		else if (strcmp((argv[3]), "100") == 0) 
+			{  ads_sps=7;  }  
+		else if (strcmp((argv[3]), "500") == 0) 
+			{  ads_sps=6;  }  
+		else if (strcmp((argv[3]), "1000") == 0) 
+			{  ads_sps=5;  }  
+		else if (strcmp((argv[3]), "2000") == 0) 
+			{  ads_sps=4;  }  
+		else if (strcmp((argv[3]), "3750") == 0) 
+			{  ads_sps=3;  }  
+		else if (strcmp((argv[3]), "7500") == 0) 
+			{  ads_sps=2;  }  
+		else if (strcmp((argv[3]), "15000") == 0) 
+			{  ads_sps=1;  }  
+		else if (strcmp((argv[3]), "30000") == 0) 
+			{  ads_sps=0;  } 
+		else  
+		{ 
+			printf ("SPS setado incorretamente: %s\n\n", argv[3]);      
+			ads_sps=666;  
+		}
+
+        if ((ads_channel==666) || (ads_gain==666) || (ads_sps==666))
+        	{
+        		printf ("Por favor revise seus parametros ! Encerrando...\n\n");
+        	}
+
+        else
+        {
+
+	        ADS1256_CfgADC(ads_gain, ads_sps);
+		    ADS1256_StartScan(0);
+			ch_num = 8;	
+
+			// Ritual sagrado de inicialização 
+			for (x = 0; x < 9; x++)
+		    {
+				for (y = 0; y < 8000; y++)
+				{
+
+					 if (bcm2835_gpio_lev(DRDY)==0)
+			         {
+			        	ADS1256_ISR();
+			       	    break;
+					 }      
+		  	 	}
+		    }
+
+		    while((ADS1256_Scan() == 0));
+			
+			i = ads_channel;	
+
+			adc[i] = ADS1256_GetAdc(i);
+		    volt[i] = (adc[i] * 100) / 167;	
+				 
+		    buf[0] = ((uint32_t)adc[i] >> 16) & 0xFF;
+		    buf[1] = ((uint32_t)adc[i] >> 8) & 0xFF;
+		    buf[2] = ((uint32_t)adc[i] >> 0) & 0xFF;
+    
+	 	    v = volt[i];
+		  
+			bsp_DelayUS(1);	
+
+		    bcm2835_spi_end();
+		    bcm2835_close();
+			
+		    
+		    printf("%8ld",  (long)adc[i]); 
+
+        }
+   }
+
+}
