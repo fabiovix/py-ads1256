@@ -1,3 +1,3 @@
 # py-ads1256
-Python code to read the 8 channels of ADS1256.
-teste
+Código em Python para a leitura de 8 canais do ADS1256.
+
