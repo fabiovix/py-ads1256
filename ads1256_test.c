@@ -34,7 +34,7 @@ RPI_V2_GPIO_P1_13->RPI_GPIO_P1_13
 #include <string.h>
 #include <math.h>
 #include <errno.h>
-
+#include "wrapper.h"
 //CS      -----   SPICS  
 //DIN     -----   MOSI
 //DOUT  -----   MISO
@@ -818,7 +818,7 @@ uint16_t Voltage_Convert(float Vref, float voltage)
 *********************************************************************************************************
 */
 
-int  main(int argc, char *argv[])
+int  lerCanais(int argc, char *par1, char *par2, char *par3,double *valorCanal)
 {
     uint8_t id;
   	int32_t adc[8];
@@ -869,88 +869,87 @@ int  main(int argc, char *argv[])
    { 
         
  		// Analisa o primeiro argumento: o canal
-        if (strcmp((argv[1]), "0") == 0) 
+        if (strcmp((par1), "0") == 0) 
 			{  ads_channel=0;  } 
-		else if (strcmp((argv[1]), "1") == 0) 
+		else if (strcmp((par1), "1") == 0) 
 			{  ads_channel=1;  }
-		else if (strcmp((argv[1]), "2") == 0) 
+		else if (strcmp((par1), "2") == 0) 
 		    {  ads_channel=2;  }
-		else if (strcmp((argv[1]), "3") == 0) 
+		else if (strcmp((par1), "3") == 0) 
 			{  ads_channel=3;  }
-		else if (strcmp((argv[1]), "4") == 0) 
+		else if (strcmp((par1), "4") == 0) 
 			{  ads_channel=4;  } 
-		else if (strcmp((argv[1]), "5") == 0) 
+		else if (strcmp((par1), "5") == 0) 
 			{  ads_channel=5;  }
-		else if (strcmp((argv[1]), "6") == 0) 
+		else if (strcmp((par1), "6") == 0) 
 			{  ads_channel=6;  } 
-		else if (strcmp((argv[1]), "7") == 0) 
+		else if (strcmp((par1), "7") == 0) 
 		    {  ads_channel=7;  }
 		else  
 		{ 
-			printf ("Canal setado incorretamente: %s\n\n", argv[1]);      
+			printf ("Canal setado incorretamente: %s\n\n", par1);      
 			ads_channel=666;  
 		}
 
 
 		// Analisa o segundo argumento: o ganho
-        if (strcmp((argv[2]), "1") == 0) 
+        if (strcmp((par2), "1") == 0) 
 			{  ads_gain=0;  } 
-		else if (strcmp((argv[2]), "2") == 0) 
+		else if (strcmp((par2), "2") == 0) 
 	    	{  ads_gain=1;  } 
-		else if (strcmp((argv[2]), "4") == 0) 
+		else if (strcmp((par2), "4") == 0) 
 	    	{  ads_gain=2;  } 
-		else if (strcmp((argv[2]), "8") == 0) 
+		else if (strcmp((par2), "8") == 0) 
 			{  ads_gain=3;  }  
-		else if (strcmp((argv[2]), "16") == 0) 
+		else if (strcmp((par2), "16") == 0) 
 			{  ads_gain=4;  }  
-		else if (strcmp((argv[2]), "32") == 0) 
+		else if (strcmp((par2), "32") == 0) 
 	    	{  ads_gain=5;  } 
-		else if (strcmp((argv[2]), "64") == 0) 
+		else if (strcmp((par2), "64") == 0) 
 			{  ads_gain=6;  }  
 		else  
 		{ 
-			printf ("Ganho setado incorretamente: %s\n\n", argv[2]);      
+			printf ("Ganho setado incorretamente: %s\n\n", par2);      
 			ads_gain=666;  
 		}
- 
 
 
  	    // Analisa o terceiro argumento: o sps
-        if (strcmp((argv[3]), "2d5") == 0) 
+        if (strcmp((par3), "2d5") == 0) 
 			{  ads_sps=15;  } 
-		else if (strcmp((argv[3]), "5") == 0) 
+		else if (strcmp((par3), "5") == 0) 
 	    	{  ads_sps=14;  } 
-		else if (strcmp((argv[3]), "10") == 0) 
+		else if (strcmp((par3), "10") == 0) 
 	    	{  ads_sps=13;  } 
-		else if (strcmp((argv[3]), "15") == 0) 
+		else if (strcmp((par3), "15") == 0) 
 			{  ads_sps=12;  }  
-		else if (strcmp((argv[3]), "25") == 0) 
+		else if (strcmp((par3), "25") == 0) 
 			{  ads_sps=11;  }  
-		else if (strcmp((argv[3]), "30") == 0) 
+		else if (strcmp((par3), "30") == 0) 
 	    	{  ads_sps=10;  } 
-		else if (strcmp((argv[3]), "50") == 0) 
+		else if (strcmp((par3), "50") == 0) 
 			{  ads_sps=9;  }  
-		else if (strcmp((argv[3]), "60") == 0) 
+		else if (strcmp((par3), "60") == 0) 
 			{  ads_sps=8;  }  
-		else if (strcmp((argv[3]), "100") == 0) 
+		else if (strcmp((par3), "100") == 0) 
 			{  ads_sps=7;  }  
-		else if (strcmp((argv[3]), "500") == 0) 
+		else if (strcmp((par3), "500") == 0) 
 			{  ads_sps=6;  }  
-		else if (strcmp((argv[3]), "1000") == 0) 
+		else if (strcmp((par3), "1000") == 0) 
 			{  ads_sps=5;  }  
-		else if (strcmp((argv[3]), "2000") == 0) 
+		else if (strcmp((par3), "2000") == 0) 
 			{  ads_sps=4;  }  
-		else if (strcmp((argv[3]), "3750") == 0) 
+		else if (strcmp((par3), "3750") == 0) 
 			{  ads_sps=3;  }  
-		else if (strcmp((argv[3]), "7500") == 0) 
+		else if (strcmp((par3), "7500") == 0) 
 			{  ads_sps=2;  }  
-		else if (strcmp((argv[3]), "15000") == 0) 
+		else if (strcmp((par3), "15000") == 0) 
 			{  ads_sps=1;  }  
-		else if (strcmp((argv[3]), "30000") == 0) 
+		else if (strcmp((par3), "30000") == 0) 
 			{  ads_sps=0;  } 
 		else  
 		{ 
-			printf ("SPS setado incorretamente: %s\n\n", argv[3]);      
+			printf ("SPS setado incorretamente: %s\n\n", par3);      
 			ads_sps=666;  
 		}
 
@@ -979,10 +978,12 @@ int  main(int argc, char *argv[])
 					 }      
 		  	 	}
 		    }
-
+		
+			for (x = 0; x < 8; x++)
+{
 		    while((ADS1256_Scan() == 0));
 			
-			i = ads_channel;	
+			i = x;//ads_channel;	
 
 			adc[i] = ADS1256_GetAdc(i);
 		    volt[i] = (adc[i] * 100) / 167;	
@@ -993,13 +994,12 @@ int  main(int argc, char *argv[])
     
 	 	    v = volt[i];
 		  
+		    valorCanal[i]=  (long)adc[i]; 
 			bsp_DelayUS(1);	
+}
 
 		    bcm2835_spi_end();
 		    bcm2835_close();
-			
-		    
-		    printf("%8ld",  (long)adc[i]); 
 
         }
    }
