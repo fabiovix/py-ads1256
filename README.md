@@ -50,7 +50,9 @@ To understand, see this code:
     print ValorDosCanais[7]
     ads1256.termina()
 
+
 The "ads1256.inicia()" function take two arguments: the ADC gain and the ADC SPS.
+
 
 ADC Gain is one of the following
 
