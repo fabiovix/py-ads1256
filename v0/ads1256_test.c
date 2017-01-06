@@ -979,10 +979,12 @@ int  main(int argc, char *argv[])
 					 }      
 		  	 	}
 		    }
-
+		
+			for (x = 0; x < 8; x++)
+{
 		    while((ADS1256_Scan() == 0));
 			
-			i = ads_channel;	
+			i = x;//ads_channel;	
 
 			adc[i] = ADS1256_GetAdc(i);
 		    volt[i] = (adc[i] * 100) / 167;	
@@ -993,13 +995,14 @@ int  main(int argc, char *argv[])
     
 	 	    v = volt[i];
 		  
+		    printf("%8ld\n",  (long)adc[i]); 
 			bsp_DelayUS(1);	
+}
 
 		    bcm2835_spi_end();
 		    bcm2835_close();
 			
 		    
-		    printf("%8ld",  (long)adc[i]); 
 
         }
    }
