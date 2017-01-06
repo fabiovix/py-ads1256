@@ -15,6 +15,8 @@ import math
 from datetime import datetime
 import Adafruit_MCP9808.MCP9808 as MCP9808
 
+import ads1256
+
 # Configura o nome base para o arquivo csv
 BASENAME = "EstGeoMag24-v8"
 
@@ -49,20 +51,10 @@ def ReadEstGeoMag():
     #temp_diff = headtemp - 20
 
        
-    # Cria um lista de tres posicoes
-    ValorDoCanal = [0]*8
 
-    resposta_comando = os.popen("./ads1256_test 0 " + str(GANHO) + " 2d5")
+    # Inicia a leitura dos valores absolutos dos oito canais do ADC para o vetor ValorDoCanal
+    ValorDoCanal = ads1256.leia_canais(str(GANHO),"2d5")
 
-    # Inicia a leitura dos valores absolutos dos tres canais do ADC para as variaveis a b c
-    ValorDoCanal[0] = (long(resposta_comando.readline())) 
-    ValorDoCanal[1] = (long(resposta_comando.readline())) 
-    ValorDoCanal[2] = (long(resposta_comando.readline())) 
-    ValorDoCanal[3] = (long(resposta_comando.readline())) 
-    ValorDoCanal[4] = (long(resposta_comando.readline())) 
-    ValorDoCanal[5] = (long(resposta_comando.readline())) 
-    ValorDoCanal[6] = (long(resposta_comando.readline())) 
-    ValorDoCanal[7] = (long(resposta_comando.readline())) 
     
     a = ValorDoCanal[0]     
     b = ValorDoCanal[1]  
