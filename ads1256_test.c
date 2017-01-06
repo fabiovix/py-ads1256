@@ -818,15 +818,11 @@ uint16_t Voltage_Convert(float Vref, float voltage)
 *********************************************************************************************************
 */
 
-int  lerCanais(int argc, char *par1, char *par2, char *par3,double *valorCanal)
+int  inicia(int argc, char *par1, char *par2, char *par3)
 {
     uint8_t id;
-  	int32_t adc[8];
-	int32_t volt[8], v;
-	uint8_t i,x,y;
-	uint8_t ch_num;
-	int32_t iTemp;
-	uint8_t buf[3];
+    uint8_t i,x,y;
+
     int ads_gain;
     int ads_channel;
     int ads_sps;
@@ -961,47 +957,54 @@ int  lerCanais(int argc, char *par1, char *par2, char *par3,double *valorCanal)
         else
         {
 
-	        ADS1256_CfgADC(ads_gain, ads_sps);
-		    ADS1256_StartScan(0);
-			ch_num = 8;	
+            ADS1256_CfgADC(ads_gain, ads_sps);
+            ADS1256_StartScan(0);
 
-			// Ritual sagrado de inicialização 
-			for (x = 0; x < 9; x++)
-		    {
-				for (y = 0; y < 8000; y++)
-				{
+            // Ritual sagrado de inicialização 
+            for (x = 0; x < 9; x++)
+            {
+                for (y = 0; y < 8000; y++)
+                {
 
-					 if (bcm2835_gpio_lev(DRDY)==0)
-			         {
-			        	ADS1256_ISR();
-			       	    break;
-					 }      
-		  	 	}
-		    }
-		
-			for (x = 0; x < 8; x++)
-{
-		    while((ADS1256_Scan() == 0));
-			
-			i = x;//ads_channel;	
+                     if (bcm2835_gpio_lev(DRDY)==0)
+                 {
+                    ADS1256_ISR();
+                    break;
+                     }      
+                }
+            }
 
-			adc[i] = ADS1256_GetAdc(i);
-		    volt[i] = (adc[i] * 100) / 167;	
-				 
-		    buf[0] = ((uint32_t)adc[i] >> 16) & 0xFF;
-		    buf[1] = ((uint32_t)adc[i] >> 8) & 0xFF;
-		    buf[2] = ((uint32_t)adc[i] >> 0) & 0xFF;
-    
-	 	    v = volt[i];
-		  
-		    valorCanal[i]=  (long)adc[i]; 
-			bsp_DelayUS(1);	
-}
-
-		    bcm2835_spi_end();
-		    bcm2835_close();
-
+            return 0; // retorna zero para dizer iniciou ok
         }
    }
 
+    return 1; // problema, parametros errados etc...
+}
+
+int lerCanais(double *valorCanal){
+    int i;
+    uint32_t adc[8];
+    uint8_t buf[3];
+
+	for (i = 0; i < 8; i++)
+	{
+        while((ADS1256_Scan() == 0));
+
+        adc[i] = ADS1256_GetAdc(i);
+         
+        buf[0] = ((uint32_t)adc[i] >> 16) & 0xFF;
+        buf[1] = ((uint32_t)adc[i] >> 8) & 0xFF;
+        buf[2] = ((uint32_t)adc[i] >> 0) & 0xFF;
+
+        valorCanal[i]=  (long)adc[i]; 
+        bsp_DelayUS(1);	
+	}
+    return 0;
+}
+
+
+int termina(void){
+    bcm2835_spi_end();
+    bcm2835_close();
+    return 0;
 }

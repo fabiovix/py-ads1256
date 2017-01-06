@@ -39,7 +39,9 @@ static PyObject *ads_leia_canais(PyObject *self, PyObject *args)
         return NULL;
 
     /* execute the code */ 
-    lerCanais(4,"0",ganho,sps,v);
+    inicia(4,"0",ganho,sps);
+    lerCanais(v);
+    termina();
 
     /* Build the output tuple */
     PyObject *ret = Py_BuildValue("[d,d,d,d, d,d,d,d]",
