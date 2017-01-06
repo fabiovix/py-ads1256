@@ -58,13 +58,15 @@ ADC Gain is one of the following
 
 
 
-SPS (Sample / Second) is one of the following
+SPS (Samples per Second) is one of the following
 
     2d5,  5,  10,  15,  25,  30,  50,  60,  100,  500,  1000,  2000,  3750,  7500,  15000,  30000
 
 
 
 After this, funcion "ads1256.leia_canais()" reads the absolute values from ADC to an array with 8 positions.
+
+
 Finally, the values are show on the console.  The "ads1256.termina()"  end the use of the ADC.
 
 
