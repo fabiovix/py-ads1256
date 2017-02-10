@@ -1,3 +1,3 @@
-int  lerCanais(double *);
-int  inicia(int argc, char*, char*, char *);
-int termina(void);
+int  readChannels(double *);
+int  adcStart(int argc, char*, char*, char *);
+int  adcStop(void);

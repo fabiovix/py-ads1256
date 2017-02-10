@@ -35,7 +35,7 @@ Please run this to test:
 
 ## Learn by example
 
-To understand, let's analyze this code:
+To understand, let's analyze this simple example:
 
     import ads1256
     ads1256.inicia(str(1),"2d5") 

@@ -818,7 +818,7 @@ uint16_t Voltage_Convert(float Vref, float voltage)
 *********************************************************************************************************
 */
 
-int  inicia(int argc, char *par1, char *par2, char *par3)
+int  adcStart(int argc, char *par1, char *par2, char *par3)
 {
     uint8_t id;
     uint8_t i,x,y;
@@ -981,7 +981,9 @@ int  inicia(int argc, char *par1, char *par2, char *par3)
     return 1; // problema, parametros errados etc...
 }
 
-int lerCanais(double *valorCanal){
+
+ // Funcao a qual o nome precisa bater com o wrapper
+int readChannels(double *valorCanal){
     int i;
     uint32_t adc[8];
     uint8_t buf[3];
@@ -1003,7 +1005,7 @@ int lerCanais(double *valorCanal){
 }
 
 
-int termina(void){
+int adcStop(void){
     bcm2835_spi_end();
     bcm2835_close();
     return 0;
