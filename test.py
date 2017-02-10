@@ -11,4 +11,4 @@ for i in range(5):
         print valorCanal
     print str(int((time.time()-d0)*1000))+"ms na leitura"
 print ads1256.termina()
-print "\n[OK] --- lib ads1256 compilada com sucesso!"
+print "\n[OK] --- lib ads1256 compilada com sucesso !!!"
