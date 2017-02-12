@@ -6,6 +6,7 @@ static char module_docstring[] =
     "Esta biblioteca é um wrapper ";
 
 /* Available functions */
+static PyObject *adc_read_channel(PyObject *self, PyObject *args);
 static PyObject *adc_read_all_channels(PyObject *self, PyObject *args);
 static PyObject *adc_start(PyObject *self, PyObject *args);
 static PyObject *adc_stop(PyObject *self, PyObject *args);
@@ -13,7 +14,8 @@ static PyObject *adc_stop(PyObject *self, PyObject *args);
 /* Module specification */
 static PyMethodDef module_methods[] = {
  //   {"chi2", chi2_chi2, METH_VARARGS, chi2_docstring},
-    {"read_all_channels", adc_read_all_channels, METH_VARARGS, {"lê 8 canais do ads1256"}},
+    {"read_channel", adc_read_channel, METH_VARARGS, {"lê o canal especificado do ads1256"}},
+    {"read_all_channels", adc_read_all_channels, METH_VARARGS, {"lê todos os 8 canais do ads1256"}},
     {"start", adc_start, METH_VARARGS, {"inicia e configura o ads1256"}},
     {"stop", adc_stop, 0, {"termina e fecha o ads1256"}},
     {NULL, NULL, 0, NULL}
@@ -47,6 +49,26 @@ static PyObject *adc_start(PyObject *self, PyObject *args)
     PyObject *ret = Py_BuildValue("i",value);
     return ret;
 }
+
+static PyObject *adc_read_channel(PyObject *self, PyObject *args)
+{
+
+    char * ch;
+    PyObject *yerr_obj;
+    double v[1];
+
+                                       
+
+    /* execute the code */ 
+    readChannel(v, ch="wancharle");
+
+    /* Build the output tuple */
+    PyObject *ret = Py_BuildValue("[d]",
+     v[0]
+    );
+    return ret;
+}
+
 
 static PyObject *adc_read_all_channels(PyObject *self, PyObject *args)
 {

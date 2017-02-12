@@ -960,7 +960,7 @@ int  adcStart(int argc, char *par1, char *par2, char *par3)
             ADS1256_CfgADC(ads_gain, ads_sps);
             ADS1256_StartScan(0);
 
-            // Ritual sagrado de inicialização 
+            // Loop de inicialização 
             for (x = 0; x < 9; x++)
             {
                 for (y = 0; y < 8000; y++)
@@ -980,6 +980,7 @@ int  adcStart(int argc, char *par1, char *par2, char *par3)
 
     return 1; // problema, parametros errados etc...
 }
+
 
 
  // Funcao a qual o nome precisa bater com o wrapper
@@ -1003,6 +1004,29 @@ int readChannels(double *valorCanal){
 	}
     return 0;
 }
+
+
+int readChannel(double *valorCanal, char *ch){
+    //int i;
+    uint32_t adc[0];
+    uint8_t buf[3];
+
+	 
+        while((ADS1256_Scan() == 0));
+
+        adc[7] = ADS1256_GetAdc(7);
+        buf[0] = ((uint32_t)adc[7] >> 16) & 0xFF;
+        buf[1] = ((uint32_t)adc[7] >> 8) & 0xFF;
+        buf[2] = ((uint32_t)adc[7] >> 0) & 0xFF;
+        valorCanal[0]=  (long)adc[7]; 
+
+        printf ("%s", ch);
+
+        bsp_DelayUS(1);	
+	 
+    return 0;
+}
+
 
 
 int adcStop(void){
