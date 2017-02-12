@@ -38,7 +38,7 @@ static PyObject *adc_start(PyObject *self, PyObject *args)
     int value ;
                                          
 
- /* Parse the input tuple */
+    /* Parse the input tuple */
     if (!PyArg_ParseTuple(args, "ss", &ganho, &sps,&yerr_obj))
         return NULL;
 
@@ -57,10 +57,14 @@ static PyObject *adc_read_channel(PyObject *self, PyObject *args)
     PyObject *yerr_obj;
     double v[1];
 
+
+    /* Parse the input tuple */
+    if (!PyArg_ParseTuple(args, "s", &ch,&yerr_obj))
+        return NULL;
                                        
 
     /* execute the code */ 
-    readChannel(v, ch="wancharle");
+    readChannel(v, ch);
 
     /* Build the output tuple */
     PyObject *ret = Py_BuildValue("[d]",
