@@ -984,7 +984,7 @@ int  adcStart(int argc, char *par1, char *par2, char *par3)
 
 
  // Funcao a qual o nome precisa bater com o wrapper
-int readChannels(double *valorCanal){
+long int readChannels(long int *valorCanal){
     int i;
     uint32_t adc[8];
     uint8_t buf[3];
@@ -1006,8 +1006,8 @@ int readChannels(double *valorCanal){
 }
 
 
-double readChannel(int ch){
-    //int i;
+long int readChannel(long int ch){
+    long int ChValue;
     uint32_t adc[0];
     uint8_t buf[3];
 
@@ -1018,11 +1018,10 @@ double readChannel(int ch){
         buf[0] = ((uint32_t)adc[ch] >> 16) & 0xFF;
         buf[1] = ((uint32_t)adc[ch] >> 8) & 0xFF;
         buf[2] = ((uint32_t)adc[ch] >> 0) & 0xFF;
-        double valorCanal =  (long)adc[ch]; 
-
+        ChValue =  (long)adc[ch]; 
         bsp_DelayUS(1);	
 	 
-    return valorCanal;
+    return ChValue;
 }
 
 

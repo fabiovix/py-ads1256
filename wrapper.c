@@ -54,9 +54,9 @@ static PyObject *adc_read_channel(PyObject *self, PyObject *args)
 {
 
     int ch;
-    double retorno;
+    long int retorno;
     PyObject *yerr_obj;
-    double v[1];
+    //double v[1];
 
 
     /* Parse the input tuple */
@@ -66,21 +66,24 @@ static PyObject *adc_read_channel(PyObject *self, PyObject *args)
 
     /* execute the code */ 
     retorno = readChannel(ch);
-    return Py_BuildValue("d",retorno);
+    printf ("\n\n\n");
+    printf ("%f", retorno);
+    printf ("\n\n\n");
+    return Py_BuildValue("l",retorno);
 }
 
 
 static PyObject *adc_read_all_channels(PyObject *self, PyObject *args)
 {
     PyObject *yerr_obj;
-    double v[8];
+    long int v[8];
                                          
 
     /* execute the code */ 
     readChannels(v);
 
     /* Build the output tuple */
-    PyObject *ret = Py_BuildValue("[d,d,d,d, d,d,d,d]",
+    PyObject *ret = Py_BuildValue("[l,l,l,l,l,l,l,l]",
 	 v[0],
 	 v[1],
 	 v[2],

@@ -33,25 +33,28 @@ Please run this to test:
     python test.py
 
 
-## Learn by example
+## Learn by example 1: reading a single channel
 
-To understand, let's analyze this simple example:
-
-    import ads1256                                   # te
-    ads1256.start(str(1),"2d5")
-    AllChannelValues = ads1256.read_all_channels()
-    print AllChannelValues[0]
-    print AllChannelValues[1]
-    print AllChannelValues[2]
-    print AllChannelValues[3]
-    print AllChannelValues[4]
-    print AllChannelValues[5]
-    print AllChannelValues[6]
-    print AllChannelValues[7]
-    ads1256.termina()
+    import ads1256                                   # import this lib
+    ads1256.start(str(1),"25")                       # initialize the ADC using 25 SPS with GAIN of 1x
+    ChannelValue = ads1256.read_channel(0)           # read the value from ADC channel 0 
+    print ChannelValue                               # print the value from the variable
+    ads1256.stop()                                   # stop the use of the ADC
 
 
-The "ads1256.inicia()" function take two arguments: the ADC gain and the ADC SPS.
+## Learn by example 2: reading all the channels at once
+
+    import ads1256                                   # import this lib
+    ads1256.start(str(1),"25")                       # initialize the ADC using 25 SPS with GAIN of 1x
+    AllChannelValues = ads1256.read_all_channels()   # create a list of 8 elements: one for each ADC channel 
+    for x in AllChannelValues:                       # for loop... 
+        print x                                      # ...print each of the list elements
+    ads1256.stop()                                   # stop the use of the ADC
+ 
+ 
+## The arguments
+
+The "ads1256.start()" function take two arguments: the ADC gain and the ADC SPS.
 
 
 ADC Gain is one of the following
@@ -64,11 +67,11 @@ SPS (Samples per Second) is one of the following
 
     2d5,  5,  10,  15,  25,  30,  50,  60,  100,  500,  1000,  2000,  3750,  7500,  15000,  30000
 
+The 2d5 SPS equals to 2.5 (it's a nomenclature issue from the original C code)
+
 
 
 After this, funcion "ads1256.leia_canais()" reads the absolute values from ADC to an array with 8 positions.
-
-
 Finally, the values are show on the console.  The "ads1256.termina()"  end the use of the ADC.
 
 

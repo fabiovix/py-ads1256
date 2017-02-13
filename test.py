@@ -29,7 +29,7 @@ for i in range(1):
 #Realiza a leitura do canal 0 do ADC
 print "Reading only the channel 0 with ads1256.read_channel():"
 d0 =time.time()
-valorCanal = ads1256.read_channel(0)
+valorCanal = ads1256.read_channel(1)
 print valorCanal
         
 print str(int((time.time()-d0)*1000))+"mS in reading this last channel\n"
