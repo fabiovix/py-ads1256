@@ -994,11 +994,9 @@ long int readChannels(long int *valorCanal){
         while((ADS1256_Scan() == 0));
 
         adc[i] = ADS1256_GetAdc(i);
-         
         buf[0] = ((uint32_t)adc[i] >> 16) & 0xFF;
         buf[1] = ((uint32_t)adc[i] >> 8) & 0xFF;
         buf[2] = ((uint32_t)adc[i] >> 0) & 0xFF;
-
         valorCanal[i]=  (long)adc[i]; 
         bsp_DelayUS(1);	
 	}
