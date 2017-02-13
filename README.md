@@ -42,6 +42,7 @@ Please run this to test:
     ads1256.stop()                                   # stop the use of the ADC
 
 
+
 ## Learn by example 2: reading all the channels at once
 
     import ads1256                                   # import this lib
