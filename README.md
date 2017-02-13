@@ -47,8 +47,8 @@ Please run this to test:
     import ads1256                                   # import this lib
     ads1256.start(str(1),"25")                       # initialize the ADC using 25 SPS with GAIN of 1x
     AllChannelValues = ads1256.read_all_channels()   # create a list of 8 elements: one for each ADC channel 
-    for x in AllChannelValues:                       # for loop... 
-        print x                                      # ...print each of the list elements
+    for x in AllChannelValues:                       # for each element in the list... 
+        print x                                      # ...print it
     ads1256.stop()                                   # stop the use of the ADC
  
  
