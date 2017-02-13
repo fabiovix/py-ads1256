@@ -14,6 +14,7 @@ ads1256.start("1","2d5")
 # Calcula e exibe quanto tempo se passou desde o inicio do programa ate o fim da execucao da funcao de inicializacao
 print str(int((time.time()-d0)*1000))+"mS in initializing ADC\n"
 
+
 # Realiza 5 leituras de todos os canais do ADC. 
 for i in range(1):
     d0 =time.time()
@@ -25,10 +26,9 @@ for i in range(1):
  
 
 d0 =time.time()
-valorDoCanal = ads1256.read_channel("wancharle")
-print "canais: \n" 
-for x in valorDoCanal:
-        print x
+valorDoCanal = ads1256.read_channel(7)
+print valorDoCanal
+        
 print str(int((time.time()-d0)*1000))+"mS in reading this last channel\n"
 
  

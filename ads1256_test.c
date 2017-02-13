@@ -1006,7 +1006,7 @@ int readChannels(double *valorCanal){
 }
 
 
-int readChannel(double *valorCanal, char *ch){
+int readChannel(double *valorCanal, int ch){
     //int i;
     uint32_t adc[0];
     uint8_t buf[3];
@@ -1014,13 +1014,11 @@ int readChannel(double *valorCanal, char *ch){
 	 
         while((ADS1256_Scan() == 0));
 
-        adc[7] = ADS1256_GetAdc(7);
-        buf[0] = ((uint32_t)adc[7] >> 16) & 0xFF;
-        buf[1] = ((uint32_t)adc[7] >> 8) & 0xFF;
-        buf[2] = ((uint32_t)adc[7] >> 0) & 0xFF;
-        valorCanal[0]=  (long)adc[7]; 
-
-        printf ("%s", ch);
+        adc[ch] = ADS1256_GetAdc(ch);
+        buf[0] = ((uint32_t)adc[ch] >> 16) & 0xFF;
+        buf[1] = ((uint32_t)adc[ch] >> 8) & 0xFF;
+        buf[2] = ((uint32_t)adc[ch] >> 0) & 0xFF;
+        valorCanal =  (long)adc[ch]; 
 
         bsp_DelayUS(1);	
 	 
