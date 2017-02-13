@@ -16,18 +16,21 @@ print str(int((time.time()-d0)*1000))+"mS in initializing ADC\n"
 
 
 # Realiza 5 leituras de todos os canais do ADC. 
+print "Reading all channels with the function ads1256.read_all_channels():"
 for i in range(1):
     d0 =time.time()
-    valoresDosCanais = ads1256.read_all_channels()
-    for x in valoresDosCanais:
+    valorTodosCanais = ads1256.read_all_channels()
+    for x in valorTodosCanais:
         print x
     print str(int((time.time()-d0)*1000))+"mS used in reading 8 channels (" + str(int((time.time()-d0)*1000)/8) + " mS in each one)\n" 
 
  
 
+#Realiza a leitura do canal 0 do ADC
+print "Reading only the channel 0 with ads1256.read_channel():"
 d0 =time.time()
-valorDoCanal = ads1256.read_channel(7)
-print valorDoCanal
+valorCanal = ads1256.read_channel(0)
+print valorCanal
         
 print str(int((time.time()-d0)*1000))+"mS in reading this last channel\n"
 

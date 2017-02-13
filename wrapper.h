@@ -1,4 +1,4 @@
 int  readChannels(double *);
-int  readChannel(double *, int);
+double  readChannel(int);
 int  adcStart(int argc, char*, char*, char *);
 int  adcStop(void);

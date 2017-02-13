@@ -1006,7 +1006,7 @@ int readChannels(double *valorCanal){
 }
 
 
-int readChannel(double *valorCanal, int ch){
+double readChannel(int ch){
     //int i;
     uint32_t adc[0];
     uint8_t buf[3];
@@ -1018,11 +1018,11 @@ int readChannel(double *valorCanal, int ch){
         buf[0] = ((uint32_t)adc[ch] >> 16) & 0xFF;
         buf[1] = ((uint32_t)adc[ch] >> 8) & 0xFF;
         buf[2] = ((uint32_t)adc[ch] >> 0) & 0xFF;
-        valorCanal =  (long)adc[ch]; 
+        double valorCanal =  (long)adc[ch]; 
 
         bsp_DelayUS(1);	
 	 
-    return 0;
+    return valorCanal;
 }
 
 

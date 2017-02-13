@@ -65,14 +65,7 @@ static PyObject *adc_read_channel(PyObject *self, PyObject *args)
                                        
 
     /* execute the code */ 
-    readChannel(v, ch);
-
-    /* Build the output tuple */
-    printf("\n\n\n");
-   // printf("%d", (double)v[0]);
-
-    printf("\n\n\n");
-    retorno = v[0]; 
+    retorno = readChannel(ch);
     return Py_BuildValue("d",retorno);
 }
 

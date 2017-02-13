@@ -37,17 +37,17 @@ Please run this to test:
 
 To understand, let's analyze this simple example:
 
-    import ads1256
-    ads1256.inicia(str(1),"2d5") 
-    ValorDosCanais = ads1256.leia_canais()
-    print ValorDosCanais[0]
-    print ValorDosCanais[1]
-    print ValorDosCanais[2]
-    print ValorDosCanais[3]
-    print ValorDosCanais[4]
-    print ValorDosCanais[5]
-    print ValorDosCanais[6]
-    print ValorDosCanais[7]
+    import ads1256                                   # te
+    ads1256.start(str(1),"2d5")
+    AllChannelValues = ads1256.read_all_channels()
+    print AllChannelValues[0]
+    print AllChannelValues[1]
+    print AllChannelValues[2]
+    print AllChannelValues[3]
+    print AllChannelValues[4]
+    print AllChannelValues[5]
+    print AllChannelValues[6]
+    print AllChannelValues[7]
     ads1256.termina()
 
 
