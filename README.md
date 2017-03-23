@@ -29,12 +29,15 @@ After this, run the following commands on a Raspberry Pi or other Debian-based O
 
 ## Testing
 
-Please run this to test:
+Please run one of these to test
 
-    python test.py
+    python read_example.py
+    python read_volts_example.py
+    python datalogger_example.py 
+ 
 
 
-## Learn by example 1: reading a single channel
+## Learn by example 1: reading a single channel's absolute value
 
     import ads1256                                   # import this lib
     ads1256.start(str(1),"25")                       # initialize the ADC using 25 SPS with GAIN of 1x
@@ -44,7 +47,7 @@ Please run this to test:
 
 
 
-## Learn by example 2: reading all the channels at once
+## Learn by example 2: reading the absolute values from all the channels at once
 
     import ads1256                                   # import this lib
     ads1256.start(str(1),"25")                       # initialize the ADC using 25 SPS with GAIN of 1x
@@ -53,8 +56,39 @@ Please run this to test:
         print x                                      # ...print it
     ads1256.stop()                                   # stop the use of the ADC
  
- 
-## The arguments
+
+
+
+## Learn by example 3: reading all the channels in absolute values and in voltage values
+
+    import ads1256       # import this lib                             
+
+    gain = 1             # ADC's Gain parameter
+    sps = 25             # ADC's SPS parameter
+
+    AllChannelValuesVolts = [0,0,0,0,0,0,0,0]       # Create the first list. It will receive ADC's absolute values
+    AllChannelValues = [0,0,0,0,0,0,0,0]            # Create the second list. It will received absolute values converted to Volts
+
+    ads1256.start(str(gain),str(sps))                    # Initialize the ADC using the parameters
+    AllChannelValues = ads1256.read_all_channels()       # Fill the first list with all the ADC's absolute channel values 
+                    
+    for i in range(0, 8):                                                                       
+        AllChannelValuesVolts[i] = (((AllChannelValues[i] * 100) /167.0)/int(gain))/1000000.0   # Fill the second list  with the voltage values
+
+    for i in range(0, 8):                      
+        print AllChannelValues[i]              # Print all the absolute values
+
+    print ("\n");                              # Print a new line
+
+    for i in range(0, 8):                      
+        print AllChannelValuesVolts[i]         # Print all the Volts values converted from the absolute values
+
+    ads1256.stop()                             # Stop the use of the ADC
+
+
+
+
+## Explaining the arguments
 
 The "ads1256.start()" function take two arguments: the ADC gain and the ADC SPS.
 
@@ -70,5 +104,9 @@ SPS (Samples per Second) is one of the following
     2d5,  5,  10,  15,  25,  30,  50,  60,  100,  500,  1000,  2000,  3750,  7500,  15000,  30000
 
 The 2d5 SPS equals to 2.5 (it's a nomenclature issue from the original C code. It should by passed this way in the Python)
+
+
+
+
  
 

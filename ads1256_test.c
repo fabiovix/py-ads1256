@@ -881,9 +881,12 @@ int  adcStart(int argc, char *par1, char *par2, char *par3)
 			{  ads_channel=6;  } 
 		else if (strcmp((par1), "7") == 0) 
 		    {  ads_channel=7;  }
+
+		// Se não for nenhum destes parametros, então foi setado errado atribuindo portanto '666' para a variavel ads_channel
 		else  
 		{ 
-			printf ("Canal setado incorretamente: %s\n\n", par1);      
+			printf ("Incorrectly set channel: %s\n", par1);      
+			printf ("CHANNEL setting must be either of the following: 0, 1, 2, 3, 4, 5, 6, 7\n\n");  
 			ads_channel=666;  
 		}
 
@@ -903,9 +906,12 @@ int  adcStart(int argc, char *par1, char *par2, char *par3)
 	    	{  ads_gain=5;  } 
 		else if (strcmp((par2), "64") == 0) 
 			{  ads_gain=6;  }  
+		
+		// Se não for nenhum destes parametros, então foi setado errado atribuindo portanto '666' para a variavel ads_gain
 		else  
 		{ 
-			printf ("Ganho setado incorretamente: %s\n\n", par2);      
+			printf ("Incorrectly set GAIN: %s\n", par2);   
+			printf ("GAIN setting must be either of the following: 1, 2, 4, 8, 16, 32, 64\n\n");        
 			ads_gain=666;  
 		}
 
@@ -943,15 +949,20 @@ int  adcStart(int argc, char *par1, char *par2, char *par3)
 			{  ads_sps=1;  }  
 		else if (strcmp((par3), "30000") == 0) 
 			{  ads_sps=0;  } 
+		
+		// Se não for nenhum destes parametros, então foi setado errado atribuindo portanto '666' para a variavel ads_sps
 		else  
 		{ 
-			printf ("SPS setado incorretamente: %s\n\n", par3);      
+			printf ("Incorrectly set channel SPS: %s\n", par3); 
+			printf ("SPS setting must be either of the following: 2d5, 5, 10, 15, 25, 30, 50, 60, 100, 500, 1000, 2000, 3750, 7500, 15000, 30000\n\n");     
 			ads_sps=666;  
 		}
 
+
+		// Se um dos parametros ficou marcado como '666', então há erros e portanto exibe a mensagem de erro.
         if ((ads_channel==666) || (ads_gain==666) || (ads_sps==666))
         	{
-        		printf ("Por favor revise seus parametros ! Encerrando...\n\n");
+        		printf ("Please Review ADC settings! Exiting...\n\n");
         	}
 
         else
