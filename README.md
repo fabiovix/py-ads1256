@@ -108,5 +108,15 @@ The 2d5 SPS equals to 2.5 (it's a nomenclature issue from the original C code. I
 
 
 
+## A Voltage Data Logger
+
+    I've included a example to use the ads1256 as a Voltage Data Logger. 
+    It keeps reading all the ads1256 channels in absolute and voltage values and saving to a CSV file until a break from the user
+    To test it, run the following:
+
+    python datalogger_example.py
+
+
+
  
 
